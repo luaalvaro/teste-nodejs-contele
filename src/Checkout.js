@@ -31,11 +31,11 @@ const Checkout = (props) => {
             <Row>
                 <Column>
                     <Title>Billing address</Title>
-                    <Subtitle>Address line 1: <span>{props.formData.billingAddress}</span></Subtitle>
-                    <Subtitle>Address line 2: <span>{props.formData.billingAddress2}</span></Subtitle>
-                    <Subtitle>City: <span>{props.formData.billingCity}</span></Subtitle>
-                    <Subtitle>State: <span>{props.formData.billingState}</span></Subtitle>
-                    <Subtitle>Zip: <span>{props.formData.billingZip}</span></Subtitle>
+                    <Subtitle>Address line 1: <span>{props.formData.sameAddress ? props.formData.shippingAddress : props.formData.billingAddress}</span></Subtitle>
+                    <Subtitle>Address line 2: <span>{props.formData.sameAddress ? props.formData.shippingAddress2 : props.formData.billingAddress2}</span></Subtitle>
+                    <Subtitle>City: <span>{props.formData.sameAddress ? props.formData.shippingCity : props.formData.billingCity}</span></Subtitle>
+                    <Subtitle>State: <span>{props.formData.sameAddress ? props.formData.shippingState : props.formData.billingState}</span></Subtitle>
+                    <Subtitle>Zip: <span>{props.formData.sameAddress ? props.formData.shippingZip : props.formData.billingZip}</span></Subtitle>
                     <Subtitle>Use shipping address same as billing address? <span>{props.formData.sameAddress ? 'True' : 'False'}</span></Subtitle>
                 </Column>
                 <Column>

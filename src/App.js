@@ -34,7 +34,9 @@ function App() {
     Object.values(qtdErrors).map(erro => {
       if (erro) {
         canContinue = false;
-      } 
+      }
+      
+      return '';
     })
 
     // Se não tiver erros de validações, vai definir o checkout mode pra true
