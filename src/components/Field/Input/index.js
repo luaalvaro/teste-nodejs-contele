@@ -5,9 +5,7 @@ const Input = styled.input`
     border-radius: 10px;
     border: 2px solid lightgray;
     outline: none;
-    margin-bottom: 25px;
     width: 100%;
-    margin-right: 25px;
 `;
 
 export default Input;

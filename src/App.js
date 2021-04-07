@@ -1,97 +1,74 @@
-import FormSection from "./components/FormSection";
+import React, { useState } from 'react';
+
 import Header from "./components/Header";
-import Field from "./components/Field";
 import Logo from "./components/Logo";
-import Title from "./components/Title";
-import Row from "./components/Row";
-import Column from "./components/Column";
 import Footer from "./components/Footer";
 import Button from "./components/Button";
-import Checkbox from "./components/Checkbox";
+import FormSectionLayout from "./FormSectionLayout";
+import Checkout from "./Checkout";
+import CheckoutOk from "./CheckoutOk";
+
+import checkFormData from './Utils/checkFormData'
+
+// Componente que ira renderizar o form ou o checkout
+function CheckRender(props) {
+  if (!props.checkout) {
+    return <FormSectionLayout formData={props.formData} setFormData={props.setFormData} errors={props.errors} />;
+  };
+
+  return <Checkout formData={props.formData}/>;
+};
 
 function App() {
+  const [checkoutMode, setCheckoutMode] = useState(false);
+  const [formData, setFormData] = useState({});
+  const [errors, setErrors] = useState({});
+  const [checkoutOk, setCheckoutOk] = useState(false);
+  let canContinue = true;
+
+  function handleOrder() {
+    canContinue = true;
+    setErrors(checkFormData(formData));
+    let qtdErrors = checkFormData(formData);
+
+    Object.values(qtdErrors).map(erro => {
+      if (erro) {
+        canContinue = false;
+      } 
+    })
+
+    // Se não tiver erros de validações, vai definir o checkout mode pra true
+    // e vai renderizar a tela de confirmar as informações
+    if (canContinue) {
+      setCheckoutMode(true)
+    }
+
+    if (canContinue && checkoutMode) {
+      // send request
+      // fetch post
+      // redirecionar para pagina de finalização
+      setCheckoutOk(true);
+      setCheckoutMode(false);
+    }
+  };
+
   return (
     <>
       <Header>
         <Logo src="logo.png" />
       </Header>
-      <FormSection>
-          <Row>
-            <Column>
-              <Title>Contact Information:</Title>
-              <Row>
-                <Field placeholder="First name"/>
-                <Field placeholder="Last name"/>
-              </Row>
-              <Row>
-                <Field placeholder="Email"/>
-                <Field placeholder="Phone"/>
-              </Row>
-              <Row>
-                <Field placeholder="Language"/>
-                <Field placeholder="Country"/>
-              </Row>
-            </Column>
-
-            <Column>
-              <Title>Shipping Address:</Title>
-              <Row>
-                <Field placeholder="Address Line 1"/>
-              </Row>
-              <Row>
-                <Field placeholder="Address Line 2"/>
-              </Row>
-              <Row>
-                <Field placeholder="City"/>
-                <Field placeholder="State"/>
-                <Field placeholder="Zip code"/>
-              </Row>
-            </Column>
-          </Row>
-
-          <Row>
-              <Column>
-                <Title>Shipping Address:</Title>
-                <Row>
-                  <Field placeholder="Address Line 1"/>
-                </Row>
-                <Row>
-                  <Field placeholder="Address Line 2"/>
-                </Row>
-                <Row>
-                  <Field placeholder="City"/>
-                  <Field placeholder="State"/>
-                  <Field placeholder="Zip code"/>
-                </Row>
-                <Row>
-                  <Checkbox text="Use shipping address same as billing address"></Checkbox>
-                </Row>
-              </Column>
-
-              <Column>
-                <Title>Check the boxes below:</Title>
-                <Row>
-                  <Checkbox text="Does any veichle need to be equiped with a fuel of device?"></Checkbox>
-                </Row>
-                <Row>
-                  <Checkbox text="Will any trackers be installed on a bike, truck or machinery?"></Checkbox>
-                </Row>
-                <Row>
-                  <Checkbox text="Will you need to identify the fleet drivers?"></Checkbox>
-                </Row>
-                <Row>
-                  <Field type="number" min="0" placeholder="How many trackers would you like to purchase?"/>
-                </Row>
-              </Column>
-          </Row>
-
-      </FormSection>
-
+        { !checkoutOk ?
+        <CheckRender checkout={checkoutMode} formData={formData} setFormData={setFormData} errors={errors} /> :
+        <CheckoutOk formData={formData} />
+        }
+      
       <Footer>
-          <Button>Order Now</Button>
+          {checkoutMode ? <Button onClick={() => {setCheckoutMode(false)}}>Voltar</Button> : ''}
+          {!checkoutOk ? <Button onClick={handleOrder}>Order Now</Button> : ''}
+          
       </Footer>
     </>
   );
-}
+};
 
 export default App;
